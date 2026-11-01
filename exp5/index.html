@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Image Gallery</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Interactive Image Gallery</h1>
+
+    <div class="gallery" id="gallery"></div>
+
+    <!-- Slideshow -->
+    <div class="slideshow" id="slideshow">
+        <span class="close" onclick="closeSlide()">×</span>
+
+        <img id="slideImage" src="" alt="Slideshow Image">
+
+        <div class="buttons">
+            <button onclick="prevImage()">Previous</button>
+            <button onclick="nextImage()">Next</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+body {
+    margin: 0;
+    font-family: Arial;
+}
+
+header {
+    background: black;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.product {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 60px;
+    text-align: center;
+}
+
+.watch {
+    font-size: 120px;
+}
+
+button {
+    padding: 12px 25px;
+    background: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.features {
+    text-align: center;
+    padding: 30px;
+}
+
+.feature-box {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.feature-box div {
+    padding: 20px;
+    border: 1px solid gray;
+}
+
+/* Mobile view */
+@media (max-width: 600px) {
+
+    .product {
+        flex-direction: column;
+        padding: 30px;
+    }
+
+    .watch {
+        font-size: 80px;
+    }
+
+    .feature-box {
+        grid-template-columns: 1fr;
+    }
+}

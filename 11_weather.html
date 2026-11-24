@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Weather App</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 400px; margin: 20px auto; }
+    input, button { padding: 8px; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+
+  <h2>Weather Information</h2>
+  <input id="cityInput" placeholder="Enter city name">
+  <button onclick="getWeather()">Get Weather</button>
+  <div id="result"></div>
+
+  <script>
+    // Convert the weather code from the API into simple text
+    function getCondition(code) {
+      if (code === 0) return "Clear sky";
+      if (code <= 3) return "Cloudy";
+      if (code <= 48) return "Fog";
+      if (code <= 67) return "Rain";
+      if (code <= 77) return "Snow";
+      if (code <= 82) return "Rain showers";
+      return "Thunderstorm";
+    }
+
+    async function getWeather() {
+      const city = document.getElementById("cityInput").value.trim();
+      const result = document.getElementById("result");
+
+      // Handle empty input
+      if (city === "") {
+        result.innerHTML = '<p class="error">Please enter a city name.</p>';
+        return;
+      }
+
+      result.innerHTML = "Loading...";
+
+      try {
+        // Step 1: find the city's latitude and longitude
+        const geoUrl = "https://geocoding-api.open-meteo.com/v1/search?count=1&name=" + encodeURIComponent(city);
+        const geoResponse = await fetch(geoUrl);
+        const geoData = await geoResponse.json();
+
+        // Handle city not found
+        if (!geoData.results) {
+          result.innerHTML = '<p class="error">City not found. Check the spelling.</p>';
+          return;
+        }
+
+        const place = geoData.results[0];
+
+        // Step 2: get the current weather for that location
+        const weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + place.latitude +
+          "&longitude=" + place.longitude +
+          "&current=temperature_2m,relative_humidity_2m,weather_code";
+        const weatherResponse = await fetch(weatherUrl);
+        const weatherData = await weatherResponse.json();
+        const current = weatherData.current;
+
+        // Show the details
+        result.innerHTML =
+          "<h3>" + place.name + ", " + place.country + "</h3>" +
+          "<p>Temperature: " + current.temperature_2m + " °C</p>" +
+          "<p>Humidity: " + current.relative_humidity_2m + " %</p>" +
+          "<p>Condition: " + getCondition(current.weather_code) + "</p>";
+
+      } catch (error) {
+        // Handle network problems or unavailable data
+        result.innerHTML = '<p class="error">Could not get weather data. Check your internet and try again.</p>';
+      }
+    }
+  </script>
+</body>
+</html>

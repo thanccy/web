@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do List</title>
+</head>
+<body>
+  <h2>To-Do List</h2>
+<input id="task">
+<button onclick="add()">Add</button>
+<ul id="list"></ul>
+
+<script>
+  let tasks = [];
+  function show() {
+    list.innerHTML = "";
+    tasks.forEach((t, i) => {
+      list.innerHTML += `<li>${t.done ? "<s>" + t.text + "</s>" : t.text}
+        <button onclick="done(${i})">Done</button>
+        <button onclick="del(${i})">Delete</button></li>`;
+    });
+  }
+
+  function add() {
+    tasks.push({ text: task.value, done: false });
+    task.value = "";
+    show();
+  }
+
+  function done(i) { tasks[i].done = true; show(); }
+
+  function del(i) { tasks.splice(i, 1); show(); }
+</script>
+</body>
+</html>

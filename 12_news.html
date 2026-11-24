@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>News Feed</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 0 10px; }
+    .article { border: 1px solid #ccc; border-radius: 6px; padding: 10px; margin-bottom: 15px; }
+    .article img { width: 100%; border-radius: 6px; }
+    .info { color: gray; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+  <h2>Latest News</h2>
+  <button onclick="loadNews()">Refresh</button>
+  <div id="newsList"></div>
+
+  <script>
+    async function loadNews() {
+      const newsList = document.getElementById("newsList");
+      newsList.innerHTML = "Loading...";
+
+      try {
+        // Get 10 articles from the REST API
+        const response = await fetch("https://api.spaceflightnewsapi.net/v4/articles/?limit=10");
+        const data = await response.json();
+
+        let html = "";
+        for (let i = 0; i < data.results.length; i++) {
+          const article = data.results[i];
+          const date = new Date(article.published_at).toLocaleDateString();
+
+          html += '<div class="article">' +
+            '<img src="' + article.image_url + '">' +
+            "<h3>" + article.title + "</h3>" +
+            "<p>" + article.summary + "</p>" +
+            '<p class="info">Source: ' + article.news_site + " | " + date + "</p>" +
+            "</div>";
+        }
+        newsList.innerHTML = html;
+
+      } catch (error) {
+        newsList.innerHTML = "<p>Could not load news. Check your internet and try again.</p>";
+      }
+    }
+
+    // Load the news when the page opens
+    loadNews();
+  </script>
+</body>
+</html>

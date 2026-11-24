@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Validation</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 400px; margin: 20px auto; }
+    input { display: block; width: 100%; padding: 8px; margin-top: 10px; box-sizing: border-box; }
+    .error { color: red; font-size: 13px; display: block; min-height: 16px; }
+  </style>
+</head>
+<body>
+
+  <h2>Register</h2>
+  <form novalidate>
+    <input type="text" placeholder="Name">
+    <small class="error"></small>
+    <input type="email" placeholder="Email">
+    <small class="error"></small>
+    <input type="password" placeholder="Password" data-strong="yes">
+    <small class="error"></small>
+    <button>Register</button>
+  </form>
+
+  <h2>Login</h2>
+  <form novalidate>
+    <input type="email" placeholder="Email">
+    <small class="error"></small>
+    <input type="password" placeholder="Password">
+    <small class="error"></small>
+    <button>Login</button>
+  </form>
+
+  <script>
+    // Returns an error message for one input, or "" if it is valid
+    function getError(input) {
+      const value = input.value.trim();
+
+      if (value === "") return "This field is required.";
+
+      if (input.type === "email" && !/^\S+@\S+\.\S+$/.test(value)) {
+        return "Enter a valid email.";
+      }
+
+      if (input.dataset.strong) {
+        if (value.length < 8) return "Use at least 8 characters.";
+        if (!/[A-Z]/.test(value)) return "Add an uppercase letter.";
+        if (!/[0-9]/.test(value)) return "Add a number.";
+      }
+
+      return "";
+    }
+
+    // Shows the error under the input. Returns true if valid.
+    function checkInput(input) {
+      const message = getError(input);
+      input.nextElementSibling.textContent = message;
+      return message === "";
+    }
+
+    // Check an input while the user types
+    document.addEventListener("input", function (event) {
+      checkInput(event.target);
+    });
+
+    // Check every input when a form is submitted
+    document.querySelectorAll("form").forEach(function (form) {
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        let allValid = true;
+
+        form.querySelectorAll("input").forEach(function (input) {
+          if (!checkInput(input)) allValid = false;
+        });
+
+        if (allValid) alert("Success!");
+      });
+    });
+  </script>
+</body>
+</html>
